@@ -1,38 +1,75 @@
-# DevFest Hackathon 2026 提出用リポジトリ
+# Eureka
 
-  DevFest Hackathon 2026 のチームの **最終提出用** リポジトリです。提出期限までに、作品のコードと資料をこのリポジトリに置いてください。
+「Eureka」は、DevFest GDGoC Japan Hackathon 2026 の作品です（カテゴリー：教育）。進路や仕事について悩んでいる大学生（学部生）が好きなことをタグで選び、Gemini との短い会話に答えると、約1,000件の職業データから、まだ知らないかもしれない仕事を職業カードで紹介する。紹介した仕事は、2.5Dの「仕事の街」と業界ページでも見られる。
 
-  このリポジトリは **公開（public）** です。開催中も、運営・審査員・ほかの参加者が見られます。
+## 構成
 
-  ## はじめに
+pnpm のモノレポ。フロントは TypeScript（pnpm ワークスペース）、バックエンドは Python（各ディレクトリで uv）。
 
-  1. GitHub から届いた招待を受け入れてください（招待の期限は 7 日です）
-  2. このリポジトリを clone して、提出物を置いてください
+```
+.
+├── apps/
+│   └── web/              画面（Next.js 静的書き出し）→ Firebase Hosting
+├── services/
+│   └── api/              公開 API（FastAPI）→ Cloud Run
+├── jobs/
+│   └── map-builder/      職業カードのデータを作るバッチ（手元で動かす）
+├── docs/
+│   ├── architecture.md   アーキテクチャと設計の約束
+│   ├── setup.md          はじめての開発環境の準備
+│   └── deploy.md         本番へのデプロイ（Firebase Hosting ＋ Cloud Run）
+├── firebase.json         Hosting の設定（/api/** → Cloud Run）
+├── pnpm-workspace.yaml
+└── tsconfig.base.json    TypeScript 共通設定（apps/web が extends する）
+```
 
-  招待の期限が切れたときや、メンバーが変わったときは、運営に連絡してください。
+詳しくは [docs/architecture.md](docs/architecture.md) と各ディレクトリの README を参照。
 
-  ## 開発用のリポジトリは別に作ることをおすすめします
+## localhost で全体を動かす
 
-  このリポジトリでは **GitHub Actions と GitHub Pages が使えません**。CI やデプロイ、Pages での公開をしたいときは、チームで開発用のリポジトリを別に作ってください。
+画面（Next.js）と API（FastAPI）を別々に動かし、API から Vertex AI の Gemini を呼ぶ。Firebase Hosting と Cloud Run には置かない。
 
-  - 開発用のリポジトリは、チームのメンバーのアカウントや、チームで作った Organization に作ってください
-  - 開発はそちらで進めて、提出期限までに最終版のコードと資料をこのリポジトリに push してください
-  - 審査はこのリポジトリの内容で行います。開発用のリポジトリにしかないものは、審査の対象になりません
-  - デプロイした作品の URL があれば、この README に書いてください
+```bash
+pnpm install                                    # リポジトリ直下で
+gcloud auth application-default login           # Vertex AI を使うとき（最初の1回。詳しくは docs/setup.md）
 
-  ## 秘密情報をコミットしない
+# API（ターミナル1）
+cd services/api
+cp .env.example .env                            # GOOGLE_CLOUD_PROJECT を自分のプロジェクトにする
+uv sync
+uv run --env-file .env uvicorn app.main:app --reload --port 8000
 
-  API キー・パスワード・サービスアカウントの鍵などは、**絶対にコミットしないでください**。公開リポジトリなので、push
-  した時点で誰でも見られます。開発用のリポジトリから持ってくるときも、履歴ごと push すると、過去のコミットに含まれる秘密情報も公開されます。
+# 画面（ターミナル2）
+cd apps/web
+cp .env.example .env.local                      # 画面から http://localhost:8000 の API を呼ぶ
+pnpm dev                                        # http://localhost:3000
+```
 
-  - 秘密情報は `.env` や `.dev.vars` などに書き、コミットしない（`.gitignore` に入れてあります）
-  - 誤って push したら、すぐにキー（鍵）を無効にして作り直し、運営に連絡してください。履歴から消すだけでは不十分です
-  - GitHub の push protection が、よく知られた形式のキーの push を止めることがあります。止められたら、そのキーをコミットから外してください
+- 好きなことを選ぶ → 会話（3〜6回。毎回、Gemini が世界の話と知らないかもしれない仕事を見せ、反応と問いへの答えをもらう）→ 会話で気になった仕事と、Gemini が1,000職業から選んだ職業カード
+- Gemini の設定がないときは、会話は職業データから選んだ仕事と決まった3問になり、職業カードは選んだ好きなことからデータで選ぶ。流れは最後まで動く
+- 職業カードのデータ（`apps/web/public/data/occupation_cards.json`）は、`jobs/map-builder` で事前に作ったもの
+- `pnpm` が見つからないときは、`corepack pnpm install`・`corepack pnpm dev` のように `corepack` を付けて動かす
 
-  ## 提出
+## 本番（Firebase）にデプロイする
 
-  提出の方法と締切は、運営からの案内に従ってください。提出期限を過ぎると、このリポジトリは読み取り専用になり、push できなくなります。
+画面は Firebase Hosting、API は Cloud Run に置いている。main に push しても自動ではデプロイされないので、更新するときは [docs/deploy.md](docs/deploy.md) の手順を実行する。
 
-  ## ライセンス
+## 必要なツール
 
-  [MIT License](LICENSE) です。ほかのライセンスにしたいときは、LICENSE を書き換えてください。
+- Node.js 22 以上・pnpm（`corepack enable` で `package.json` の `packageManager` のバージョンが使われる）
+- [uv](https://docs.astral.sh/uv/)（Python の依存管理）
+- Google Cloud CLI（`gcloud`）・Firebase CLI
+- Docker Desktop（API を Cloud Run にデプロイするときだけ）
+
+はじめての人は、ツールの入れ方と Google Cloud へのログイン（ADC）を [docs/setup.md](docs/setup.md) の順にやる。
+
+## 秘密情報の扱い
+
+API キーやサービスアカウントの鍵は作らない。Gemini は、手元では自分の Google アカウントのログイン情報（ADC）で、本番では Cloud Run のサービスアカウントで呼ぶ。
+
+- 設定は `.env`（API）と `.env.local`（画面）に書き、コミットしない（`.gitignore` に入れてある）
+- リポジトリには、値を入れていない `.env.example` だけを置いている
+
+## ライセンス
+
+[MIT License](LICENSE) です。ほかのライセンスにしたいときは、LICENSE を書き換えてください。

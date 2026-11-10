@@ -1,0 +1,38 @@
+:root {
+  color-scheme: light;
+  --ink: #3a3836;        /* 本文・診断ボタン */
+  --sub: #8c8883;        /* 補助テキスト */
+  --line: #e7e4df;       /* 区切り線・チャートの目盛り */
+  --bg: #f4f2ee;         /* ページの背景 */
+  --card: #fff;          /* カード */
+  --card-soft: #f8f6f3;  /* 結果のタイプカード */
+  --rose: #b0647a;       /* サブ文・チャート */
+  --off: #d6d4d0;        /* 押せないボタン */
+  --sidebar: 280px;      /* サイドバーの幅 */
+  --header: 60px;        /* ヘッダーの高さ */
+
+  /* RIASEC の色 */
+  --type-R: #c4875a;
+  --type-I: #5b7fa6;
+  --type-A: #8a7aa8;
+  --type-S: #5f9a7a;
+  --type-E: #b89a4a;
+  --type-C: #6f7d8c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", system-ui, sans-serif;
+}
+
+a { color: inherit; text-decoration: none; }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}

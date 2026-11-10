@@ -1,0 +1,774 @@
+{
+ "note": "仕事の街のキャラクターの部品と区画のカタログ。画面（components/town/people.ts が描く）と jobs/map-builder（town_look.py が Gemini に選ばせる）の両方が読む。部品を足すときは、ここに足し、people.ts に描き方を足す",
+ "colors": [
+  {
+   "id": "navy",
+   "ja": "紺",
+   "hex": "#2f4468"
+  },
+  {
+   "id": "black",
+   "ja": "黒",
+   "hex": "#33312e"
+  },
+  {
+   "id": "gray",
+   "ja": "灰色",
+   "hex": "#8d939b"
+  },
+  {
+   "id": "white",
+   "ja": "白",
+   "hex": "#f6f6f3"
+  },
+  {
+   "id": "beige",
+   "ja": "ベージュ",
+   "hex": "#d8c3a0"
+  },
+  {
+   "id": "brown",
+   "ja": "茶",
+   "hex": "#8a5a3c"
+  },
+  {
+   "id": "red",
+   "ja": "赤",
+   "hex": "#d6453d"
+  },
+  {
+   "id": "orange",
+   "ja": "オレンジ",
+   "hex": "#ee8a3a"
+  },
+  {
+   "id": "yellow",
+   "ja": "黄",
+   "hex": "#f2c230"
+  },
+  {
+   "id": "green",
+   "ja": "緑",
+   "hex": "#5e9a4a"
+  },
+  {
+   "id": "teal",
+   "ja": "青緑",
+   "hex": "#2a9d8f"
+  },
+  {
+   "id": "blue",
+   "ja": "青",
+   "hex": "#3f78c4"
+  },
+  {
+   "id": "skyblue",
+   "ja": "水色",
+   "hex": "#86c1e6"
+  },
+  {
+   "id": "purple",
+   "ja": "紫",
+   "hex": "#7d5ba6"
+  },
+  {
+   "id": "pink",
+   "ja": "ピンク",
+   "hex": "#e889a8"
+  }
+ ],
+ "districts": [
+  {
+   "id": "farm",
+   "ja": "農村・森",
+   "desc": "田畑・果樹園・森・植物工場"
+  },
+  {
+   "id": "ranch",
+   "ja": "牧場・動物園",
+   "desc": "牧場・動物園・水族館・ペットの店や病院"
+  },
+  {
+   "id": "energy",
+   "ja": "発電所・リサイクル",
+   "desc": "発電所・送電・ガス・水道・ごみ処理・リサイクル"
+  },
+  {
+   "id": "factory",
+   "ja": "工場地帯",
+   "desc": "ものをつくる工場・修理工場"
+  },
+  {
+   "id": "port",
+   "ja": "港・空港・駅",
+   "desc": "港・空港・駅・物流センター・車の整備"
+  },
+  {
+   "id": "build",
+   "ja": "工事現場",
+   "desc": "建物や道路をつくる現場・設計事務所"
+  },
+  {
+   "id": "stage",
+   "ja": "劇場・スタジアム",
+   "desc": "コンサート・演劇・スポーツの会場"
+  },
+  {
+   "id": "office",
+   "ja": "オフィス街",
+   "desc": "会社の事務所・銀行・IT企業・法律事務所"
+  },
+  {
+   "id": "lab",
+   "ja": "研究学園",
+   "desc": "研究所・大学・実験施設"
+  },
+  {
+   "id": "townhall",
+   "ja": "役所・警察・消防",
+   "desc": "役所・警察署・消防署・裁判所"
+  },
+  {
+   "id": "resort",
+   "ja": "観光地・ホテル",
+   "desc": "ホテル・旅館・遊園地・式場・温泉"
+  },
+  {
+   "id": "hospital",
+   "ja": "病院・福祉",
+   "desc": "病院・診療所・介護施設・薬局"
+  },
+  {
+   "id": "school",
+   "ja": "学校",
+   "desc": "保育園・小中高校・図書館・習い事"
+  },
+  {
+   "id": "shops",
+   "ja": "商店街",
+   "desc": "お店・飲食店・美容院・くらしのサービス"
+  },
+  {
+   "id": "media",
+   "ja": "テレビ局・スタジオ",
+   "desc": "テレビ・ラジオ・新聞・出版・アニメ・ゲームの制作"
+  }
+ ],
+ "parts": {
+  "top": [
+   {
+    "id": "tshirt",
+    "ja": "Tシャツ"
+   },
+   {
+    "id": "shirt",
+    "ja": "えり付きのシャツ"
+   },
+   {
+    "id": "polo",
+    "ja": "ポロシャツ"
+   },
+   {
+    "id": "hoodie",
+    "ja": "パーカー"
+   },
+   {
+    "id": "suit",
+    "ja": "スーツの上着とネクタイ"
+   },
+   {
+    "id": "cardigan",
+    "ja": "カーディガン"
+   },
+   {
+    "id": "vest",
+    "ja": "ベスト（ホテル・お店の制服）"
+   },
+   {
+    "id": "apron",
+    "ja": "エプロン"
+   },
+   {
+    "id": "whitecoat",
+    "ja": "白衣（医師・研究者・薬剤師）",
+    "fixed": "white"
+   },
+   {
+    "id": "scrubs",
+    "ja": "スクラブ（医療の半そで）"
+   },
+   {
+    "id": "coverall",
+    "ja": "つなぎの作業服"
+   },
+   {
+    "id": "hivis",
+    "ja": "反射材つきの安全ベスト",
+    "fixed": "orange"
+   },
+   {
+    "id": "uniform",
+    "ja": "金ボタンの制服（警察・警備・乗務員）"
+   },
+   {
+    "id": "chefcoat",
+    "ja": "コックコート",
+    "fixed": "white"
+   },
+   {
+    "id": "jersey",
+    "ja": "スポーツのユニフォーム（番号入り）"
+   },
+   {
+    "id": "happi",
+    "ja": "法被（祭り・イベント）"
+   },
+   {
+    "id": "kimono",
+    "ja": "着物・作務衣"
+   },
+   {
+    "id": "dress",
+    "ja": "ワンピース"
+   },
+   {
+    "id": "spacesuit",
+    "ja": "防護服・クリーンスーツ",
+    "fixed": "white"
+   }
+  ],
+  "bottom": [
+   {
+    "id": "pants",
+    "ja": "ズボン"
+   },
+   {
+    "id": "jeans",
+    "ja": "ジーンズ",
+    "fixed": "blue"
+   },
+   {
+    "id": "skirt",
+    "ja": "スカート"
+   },
+   {
+    "id": "shorts",
+    "ja": "短パン"
+   },
+   {
+    "id": "workpants",
+    "ja": "作業ズボン（ポケット付き）"
+   }
+  ],
+  "hair": [
+   {
+    "id": "short",
+    "ja": "短い髪"
+   },
+   {
+    "id": "side",
+    "ja": "横分け"
+   },
+   {
+    "id": "long",
+    "ja": "長い髪"
+   },
+   {
+    "id": "bob",
+    "ja": "ボブ"
+   },
+   {
+    "id": "ponytail",
+    "ja": "ポニーテール"
+   },
+   {
+    "id": "bun",
+    "ja": "おだんご"
+   },
+   {
+    "id": "curly",
+    "ja": "くせ毛"
+   },
+   {
+    "id": "buzz",
+    "ja": "坊主"
+   }
+  ],
+  "hat": [
+   {
+    "id": "none",
+    "ja": "なし"
+   },
+   {
+    "id": "helmet",
+    "ja": "工事用ヘルメット"
+   },
+   {
+    "id": "lamphelmet",
+    "ja": "ライト付きヘルメット（鉱山・トンネル）"
+   },
+   {
+    "id": "firehat",
+    "ja": "消防の赤いヘルメット"
+   },
+   {
+    "id": "cap",
+    "ja": "キャップ"
+   },
+   {
+    "id": "police",
+    "ja": "制帽（警察・警備）"
+   },
+   {
+    "id": "pilot",
+    "ja": "機長・船長の帽子"
+   },
+   {
+    "id": "straw",
+    "ja": "麦わら帽子"
+   },
+   {
+    "id": "chef",
+    "ja": "コック帽"
+   },
+   {
+    "id": "hairnet",
+    "ja": "衛生帽子（食品工場・給食）"
+   },
+   {
+    "id": "beret",
+    "ja": "ベレー帽"
+   },
+   {
+    "id": "headband",
+    "ja": "ねじりはちまき・手ぬぐい"
+   },
+   {
+    "id": "beanie",
+    "ja": "ニット帽"
+   },
+   {
+    "id": "cowboy",
+    "ja": "テンガロンハット"
+   },
+   {
+    "id": "safari",
+    "ja": "探検帽（野外調査）"
+   }
+  ],
+  "accessory": [
+   {
+    "id": "glasses",
+    "ja": "めがね"
+   },
+   {
+    "id": "sunglasses",
+    "ja": "サングラス"
+   },
+   {
+    "id": "mask",
+    "ja": "マスク"
+   },
+   {
+    "id": "headset",
+    "ja": "ヘッドセット"
+   },
+   {
+    "id": "earmuffs",
+    "ja": "イヤーマフ（防音）"
+   },
+   {
+    "id": "goggles",
+    "ja": "保護ゴーグル"
+   },
+   {
+    "id": "stethoscope",
+    "ja": "聴診器"
+   },
+   {
+    "id": "idcard",
+    "ja": "首から下げた社員証"
+   },
+   {
+    "id": "bowtie",
+    "ja": "蝶ネクタイ"
+   },
+   {
+    "id": "scarf",
+    "ja": "スカーフ"
+   },
+   {
+    "id": "backpack",
+    "ja": "リュック"
+   },
+   {
+    "id": "toolbelt",
+    "ja": "工具ベルト"
+   },
+   {
+    "id": "gloves",
+    "ja": "手袋"
+   },
+   {
+    "id": "armband",
+    "ja": "腕章"
+   },
+   {
+    "id": "whistle",
+    "ja": "ホイッスル"
+   }
+  ],
+  "held": [
+   {
+    "id": "none",
+    "ja": "なし"
+   },
+   {
+    "id": "laptop",
+    "ja": "ノートパソコン"
+   },
+   {
+    "id": "tablet",
+    "ja": "タブレット"
+   },
+   {
+    "id": "clipboard",
+    "ja": "クリップボード"
+   },
+   {
+    "id": "phone",
+    "ja": "スマホ・電話"
+   },
+   {
+    "id": "briefcase",
+    "ja": "仕事かばん"
+   },
+   {
+    "id": "document",
+    "ja": "書類"
+   },
+   {
+    "id": "book",
+    "ja": "本"
+   },
+   {
+    "id": "pen",
+    "ja": "ペンとメモ"
+   },
+   {
+    "id": "blueprint",
+    "ja": "設計図"
+   },
+   {
+    "id": "calculator",
+    "ja": "電卓"
+   },
+   {
+    "id": "flask",
+    "ja": "フラスコ"
+   },
+   {
+    "id": "testtube",
+    "ja": "試験管"
+   },
+   {
+    "id": "magnifier",
+    "ja": "虫めがね"
+   },
+   {
+    "id": "microscope",
+    "ja": "顕微鏡"
+   },
+   {
+    "id": "mic",
+    "ja": "マイク"
+   },
+   {
+    "id": "guitar",
+    "ja": "ギター"
+   },
+   {
+    "id": "baton",
+    "ja": "指揮棒"
+   },
+   {
+    "id": "brush",
+    "ja": "絵筆"
+   },
+   {
+    "id": "palette",
+    "ja": "パレット"
+   },
+   {
+    "id": "camera",
+    "ja": "カメラ"
+   },
+   {
+    "id": "videocam",
+    "ja": "ビデオカメラ"
+   },
+   {
+    "id": "ball",
+    "ja": "ボール"
+   },
+   {
+    "id": "racket",
+    "ja": "ラケット"
+   },
+   {
+    "id": "wrench",
+    "ja": "スパナ"
+   },
+   {
+    "id": "hammer",
+    "ja": "ハンマー"
+   },
+   {
+    "id": "drill",
+    "ja": "電動ドリル"
+   },
+   {
+    "id": "shovel",
+    "ja": "スコップ"
+   },
+   {
+    "id": "broom",
+    "ja": "ほうき"
+   },
+   {
+    "id": "wateringcan",
+    "ja": "じょうろ"
+   },
+   {
+    "id": "seedling",
+    "ja": "苗"
+   },
+   {
+    "id": "scissors",
+    "ja": "はさみ"
+   },
+   {
+    "id": "pan",
+    "ja": "フライパン"
+   },
+   {
+    "id": "tray",
+    "ja": "お盆と飲み物"
+   },
+   {
+    "id": "cup",
+    "ja": "コーヒーカップ"
+   },
+   {
+    "id": "box",
+    "ja": "段ボール箱"
+   },
+   {
+    "id": "mail",
+    "ja": "手紙・郵便"
+   },
+   {
+    "id": "flag",
+    "ja": "案内の旗"
+   },
+   {
+    "id": "megaphone",
+    "ja": "メガホン"
+   },
+   {
+    "id": "scale",
+    "ja": "天びん（法律）"
+   },
+   {
+    "id": "map",
+    "ja": "地図"
+   },
+   {
+    "id": "globe",
+    "ja": "地球儀"
+   },
+   {
+    "id": "binoculars",
+    "ja": "双眼鏡"
+   },
+   {
+    "id": "net",
+    "ja": "網"
+   },
+   {
+    "id": "bouquet",
+    "ja": "花束"
+   },
+   {
+    "id": "bucket",
+    "ja": "バケツ"
+   },
+   {
+    "id": "basket",
+    "ja": "かご"
+   },
+   {
+    "id": "robot",
+    "ja": "小さなロボット"
+   },
+   {
+    "id": "drone",
+    "ja": "ドローン"
+   },
+   {
+    "id": "paintroller",
+    "ja": "ペンキのローラー"
+   },
+   {
+    "id": "pointer",
+    "ja": "指し棒"
+   },
+   {
+    "id": "syringe",
+    "ja": "注射器"
+   }
+  ],
+  "companion": [
+   {
+    "id": "none",
+    "ja": "なし"
+   },
+   {
+    "id": "dog",
+    "ja": "犬"
+   },
+   {
+    "id": "cat",
+    "ja": "猫"
+   },
+   {
+    "id": "cow",
+    "ja": "牛"
+   },
+   {
+    "id": "horse",
+    "ja": "馬"
+   },
+   {
+    "id": "sheep",
+    "ja": "羊"
+   },
+   {
+    "id": "pig",
+    "ja": "豚"
+   },
+   {
+    "id": "chicken",
+    "ja": "にわとり"
+   },
+   {
+    "id": "rabbit",
+    "ja": "うさぎ"
+   },
+   {
+    "id": "bird",
+    "ja": "小鳥"
+   },
+   {
+    "id": "fishtank",
+    "ja": "魚の水槽"
+   },
+   {
+    "id": "penguin",
+    "ja": "ペンギン"
+   },
+   {
+    "id": "giraffe",
+    "ja": "キリン"
+   },
+   {
+    "id": "plant",
+    "ja": "鉢植えの植物"
+   }
+  ],
+  "vehicle": [
+   {
+    "id": "none",
+    "ja": "なし"
+   },
+   {
+    "id": "car",
+    "ja": "乗用車"
+   },
+   {
+    "id": "truck",
+    "ja": "トラック"
+   },
+   {
+    "id": "bus",
+    "ja": "バス"
+   },
+   {
+    "id": "taxi",
+    "ja": "タクシー"
+   },
+   {
+    "id": "forklift",
+    "ja": "フォークリフト"
+   },
+   {
+    "id": "bicycle",
+    "ja": "自転車"
+   },
+   {
+    "id": "scooter",
+    "ja": "配達バイク"
+   },
+   {
+    "id": "tractor",
+    "ja": "トラクター"
+   },
+   {
+    "id": "ambulance",
+    "ja": "救急車"
+   },
+   {
+    "id": "firetruck",
+    "ja": "消防車"
+   },
+   {
+    "id": "patrolcar",
+    "ja": "パトカー"
+   },
+   {
+    "id": "excavator",
+    "ja": "ショベルカー"
+   },
+   {
+    "id": "cart",
+    "ja": "台車"
+   },
+   {
+    "id": "wheelchair",
+    "ja": "車いす（介助）"
+   }
+  ],
+  "pose": [
+   {
+    "id": "stand",
+    "ja": "立っている"
+   },
+   {
+    "id": "wave",
+    "ja": "手をふっている"
+   },
+   {
+    "id": "work",
+    "ja": "手を前に出して作業している"
+   },
+   {
+    "id": "carry",
+    "ja": "物を両手で運んでいる"
+   },
+   {
+    "id": "point",
+    "ja": "指さして案内・説明している"
+   }
+  ]
+ }
+}

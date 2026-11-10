@@ -1,4 +1,16 @@
-# 秘密情報（コミットしない）
+node_modules/
+.pnpm-store/
+
+#build
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+
+#env
 .env
 .env.*
 !.env.example
@@ -8,27 +20,36 @@
 *.pem
 *.key
 *.p12
-service-account*.json
-credentials*.json
 google-services.json
 GoogleService-Info.plist
 
-# 依存関係とビルドの成果物
-node_modules/
-dist/
-build/
-out/
-.next/
-.wrangler/
-__pycache__/
-*.pyc
-.venv/
-venv/
+# サービスアカウントの鍵（鍵JSONは作らない方針。万一のための保険）
+*service-account*.json
+*serviceaccount*.json
+*-sa-key*.json
+credentials*.json
+application_default_credentials.json
 
-# OS とエディタ
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+
+# Firebase
+.firebase/
+# デプロイ先のプロジェクトとサイト（.firebaserc.example をコピーして作る）
+.firebaserc
+*-debug.log
+firebase-export-*/
+
+#local
+.data/
+*.log
+
+# OS / editor
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
-*.log

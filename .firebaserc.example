@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "<プロジェクトID>"
+  },
+  "targets": {
+    "<プロジェクトID>": {
+      "hosting": {
+        "primary": [
+          "<サイト名>"
+        ],
+        "secondary": [
+          "<2つ目のサイト名>"
+        ]
+      }
+    }
+  }
+}

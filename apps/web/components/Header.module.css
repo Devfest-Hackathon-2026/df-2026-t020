@@ -1,0 +1,23 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--header);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+
+.logo { display: flex; align-items: center; gap: 10px; }
+
+.name { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.02em; color: var(--ink); }
+
+.tagline { font-size: 0.82rem; color: var(--sub); }
+
+@media (max-width: 720px) {
+  .header { position: static; padding: 0 16px; }
+  .tagline { display: none; }
+}

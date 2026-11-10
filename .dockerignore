@@ -1,0 +1,8 @@
+# services/api/Dockerfile はリポジトリのルートからビルドする。
+# node_modules などを送らないよう、すべて除いてから要るものだけ戻す。
+*
+!services/api/pyproject.toml
+!services/api/uv.lock
+!services/api/app/
+services/api/app/**/__pycache__
+!apps/web/public/data/occupation_cards.json

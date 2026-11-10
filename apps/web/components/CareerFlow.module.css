@@ -1,0 +1,285 @@
+/* ホームの流れ（好きなこと → 会話 → 職業カード）の外枠と、会話の画面 */
+
+.flow {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 32px 48px;
+  display: grid;
+  gap: 20px;
+}
+
+/* 進み具合 */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--sub);
+}
+
+.steps li { display: flex; align-items: center; gap: 8px; }
+
+.steps li + li::before { content: "→"; margin-right: 12px; color: var(--off); }
+
+.num {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 99px;
+  background: var(--off);
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+.current { color: var(--ink); }
+
+.current .num { background: var(--ink); }
+
+/* 会話のカード */
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 32px 36px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  max-width: 860px;
+  width: 100%;
+}
+
+.chatHead {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.count { font-size: 0.8rem; color: var(--sub); }
+
+/* これまでの答え */
+.log {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.log li { display: grid; gap: 4px; }
+
+.logQ { font-size: 0.82rem; color: var(--sub); line-height: 1.5; }
+
+.logA {
+  justify-self: end;
+  max-width: 85%;
+  background: var(--card-soft);
+  border-radius: 12px 12px 2px 12px;
+  padding: 6px 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.answers { margin: 0 0 20px; font-size: 0.85rem; }
+
+.answers summary { cursor: pointer; color: var(--sub); width: fit-content; }
+
+.answers .log { margin: 12px 0 0; max-width: 640px; }
+
+/* 知る：世界の話と仕事 */
+.stage {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--type-I);
+  border-radius: 99px;
+  padding: 2px 10px;
+  margin-bottom: 8px;
+}
+
+.think .stage { background: var(--rose); }
+
+.explore {
+  background: var(--card-soft);
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+
+.exploreTitle { font-size: 1.15rem; font-weight: 800; margin: 0 0 8px; line-height: 1.5; }
+
+.exploreTitle:focus { outline: none; }
+
+.exploreText { margin: 0 0 16px; font-size: 0.92rem; line-height: 1.75; }
+
+.jobs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.job {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jobName { margin: 0; font-size: 1rem; font-weight: 800; }
+
+.jobWhat { margin: 0; font-size: 0.85rem; line-height: 1.6; flex: 1; }
+
+.reactions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+
+.reaction {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--sub);
+  border-radius: 99px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reaction[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+/* いまの問い */
+.question {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+
+.question:focus { outline: none; }
+
+.options { display: grid; gap: 10px; }
+
+.option {
+  text-align: left;
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 18px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.option:hover { border-color: var(--ink); background: var(--card-soft); }
+
+.other { margin-top: 16px; display: grid; gap: 6px; }
+
+.other label { font-size: 0.8rem; color: var(--sub); font-weight: 700; }
+
+.otherRow { display: flex; gap: 8px; }
+
+.otherRow input {
+  flex: 1;
+  min-width: 0;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.otherRow input:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+.thinking { color: var(--sub); margin: 8px 0; animation: blink 1.6s ease-in-out infinite; }
+
+@keyframes blink {
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thinking { animation: none; }
+}
+
+
+.error p { margin: 0 0 12px; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ボタン */
+.primary,
+.secondary {
+  border-radius: 12px;
+  padding: 11px 18px;
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.primary { border: none; background: var(--ink); color: #fff; }
+
+.secondary { border: 2px solid var(--ink); background: #fff; color: var(--ink); }
+
+.secondary:disabled { border-color: var(--off); color: var(--off); cursor: default; }
+
+.link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--sub);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@container (max-width: 900px) {
+  .flow { padding: 16px 16px 32px; }
+  .card { padding: 24px 20px; }
+}
+
+/* 結果：会話で出会った仕事 */
+.met { margin: 0 0 28px; }
+
+.metTitle { font-size: 1rem; font-weight: 800; margin: 0 0 6px; }
+
+.stats { margin: 0 0 12px; font-size: 0.85rem; color: var(--sub); }
+
+.stats strong { color: var(--ink); font-size: 1rem; }
+
+.unknown {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--rose);
+  border: 1px solid currentColor;
+  border-radius: 99px;
+  padding: 1px 8px;
+  align-self: flex-start;
+}
+
+/* 結果の下の「最初からやり直す」「過去の結果を見る」 */
+.footerLinks { display: flex; flex-wrap: wrap; gap: 16px; }

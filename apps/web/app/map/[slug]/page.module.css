@@ -1,0 +1,430 @@
+.page { flex: 1; display: flex; flex-direction: column; padding: 32px 40px 40px; }
+
+/* 業界の色。--hue・--chroma（industryLook.ts の toneProps）から作る */
+.tone {
+  --tone-bg: oklch(var(--lightness, 0.6) var(--chroma) var(--hue)); /* ステッカーの丸 */
+  --tone-ink: #fff;                                               /* ステッカーの線 */
+  --tint: oklch(0.965 calc(var(--chroma) * 0.2) var(--hue));      /* 見出しの面 */
+  --sprinkle: oklch(0.86 calc(var(--chroma) * 0.5) var(--hue));   /* ちらしたアイコン */
+  --stage: oklch(0.935 calc(var(--chroma) * 0.34) var(--hue));    /* 職業カードの絵の背景 */
+  --stage-light: oklch(0.975 calc(var(--chroma) * 0.2) var(--hue)); /* 絵の背景の丸 */
+  --tile: oklch(0.84 calc(var(--chroma) * 0.6) var(--hue));       /* キャラクターが立つタイル */
+  --tile-side: oklch(0.74 calc(var(--chroma) * 0.62) var(--hue)); /* タイルの厚み */
+}
+
+/* 明るい丸に濃い線の業界（黄〜黄緑は暗くすると濁るので、こちらにする） */
+.tone[data-tone="light"] {
+  --tone-bg: oklch(0.86 var(--chroma) var(--hue));
+  --tone-ink: var(--ink);
+  --tint: oklch(0.97 calc(var(--chroma) * 0.28) var(--hue));
+  --sprinkle: oklch(0.86 calc(var(--chroma) * 0.7) var(--hue));
+  --stage: oklch(0.945 calc(var(--chroma) * 0.5) var(--hue));
+  --stage-light: oklch(0.98 calc(var(--chroma) * 0.3) var(--hue));
+  --tile: oklch(0.87 calc(var(--chroma) * 0.85) var(--hue));
+  --tile-side: oklch(0.78 calc(var(--chroma) * 0.85) var(--hue));
+}
+
+/* 見出し：業界の色の面に、アイコンのステッカーと、ちらしたアイコン */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 24px;
+  padding: 36px 40px;
+  border-radius: 18px;
+  background: var(--tint);
+}
+
+.sprinkles {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: min(60%, 520px);
+  height: 100%;
+  color: var(--sprinkle);
+  /* 文字に近い左側は薄くしていく */
+  mask-image: linear-gradient(to right, transparent, #000 45%);
+}
+
+.sticker {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: var(--tone-bg);
+  color: var(--tone-ink);
+  box-shadow: 0 0 0 5px #fff, 0 8px 18px rgba(0, 0, 0, 0.08);
+  transform: rotate(-8deg);
+  animation: stick 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+}
+
+/* ページを開いたときに、ステッカーを貼る動き（1回だけ） */
+@keyframes stick {
+  from { transform: scale(0.5) rotate(-28deg); opacity: 0; }
+  to { transform: rotate(-8deg); opacity: 1; }
+}
+
+.heroText { min-width: 0; }
+
+.brand {
+  font-weight: 800;
+  color: var(--sub);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.title { margin: 0 0 8px; font-size: 28px; font-weight: 800; line-height: 1.3; }
+
+/* 日本語を文節で折り返す（auto-phrase に対応していないブラウザでは、ふつうに折り返す） */
+.description { margin: 0; max-width: 36em; font-size: 1rem; line-height: 1.7; word-break: auto-phrase; text-wrap: pretty; }
+
+/* 仕事の街へ：この業界の人を光らせて見る */
+.toTown {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 7px 16px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.toTown:hover { background: #000; }
+
+/* 職業カードの見た目は、診断結果の職業カード（components/JobCards.module.css）に合わせる */
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 32px 36px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 1.5rem;
+  margin: 0 0 16px;
+  font-weight: 800;
+}
+
+.count { flex: none; font-size: 0.8rem; font-weight: 700; color: var(--sub); white-space: nowrap; }
+
+.empty { color: var(--sub); margin: 0; }
+
+/* 分野へのリンク（仕事の多い業界を、分野ごとに区切るとき）。
+   下へ読み進めても押せるよう、仕事の一覧の間は画面の上に貼り付ける */
+.fieldIndex {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  list-style: none;
+  margin: 0 -12px;
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: var(--card);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.fieldLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 13px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--card);
+  font-size: 0.85rem;
+  font-weight: 700;
+  word-break: auto-phrase;
+}
+
+.fieldLink:hover { border-color: var(--sub); }
+
+.fieldCount { font-size: 0.75rem; font-weight: 700; color: var(--sub); }
+
+/* 分野のまとまり。リンクで移ったときに、見出しが上に貼り付いたリンクの下に来るようにする */
+.field { margin-top: 28px; scroll-margin-top: 136px; }
+
+/* どの分野も全件を出して続けて並ぶので、分野と分野の間は広くあけて境目を分かりやすくする */
+.field + .field { margin-top: 96px; }
+
+.fieldTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.4;
+  word-break: auto-phrase;
+}
+
+/* 見出しの頭に、業界の色の印 */
+.fieldTitle::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 1.1em;
+  border-radius: 4px;
+  background: var(--tone-bg);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px 16px;
+}
+
+/* 職業カード。手に取れる厚紙のカードのように、下に厚みを付ける。上が絵、下が文字 */
+.job {
+  position: relative;
+  /* カードの中の重なり順を、カードの中に閉じこめる（タグやシールが、上に貼り付いた分野へのリンクより手前に出ないように） */
+  isolation: isolate;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 8px 8px 16px;
+  background: var(--card);
+  box-shadow: 0 3px 0 var(--line);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+  /* リンクで移ってきたとき、上に貼り付いた分野へのリンクに隠れないようにする */
+  scroll-margin-top: 152px;
+}
+
+/* カードにポインターを乗せると、手に取ったように少し浮いて傾く（となりのカードとは逆に傾ける） */
+.job:hover { transform: translateY(-5px) rotate(-0.8deg); box-shadow: 0 3px 0 var(--line), 0 16px 26px rgba(58, 56, 54, 0.13); }
+.job:nth-child(even):hover { transform: translateY(-5px) rotate(0.8deg); }
+
+/* 仕事の街や診断の結果から移ってきた仕事（ArrivedJob が印を付ける）。業界の色の枠で、どのカードかを示す */
+.job[data-arrived] {
+  border-color: var(--tone-bg);
+  box-shadow: 0 0 0 3px var(--tone-bg);
+  background: var(--tint);
+}
+
+/* カードの絵：業界の色の舞台。まるい明かりの前で、仕事の街のタイルにキャラクターが立つ */
+.art {
+  position: relative;
+  overflow: hidden;
+  height: 158px;
+  border-radius: 12px;
+  background: var(--stage);
+}
+
+.art::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  width: 120px;
+  height: 120px;
+  margin-left: -60px;
+  border-radius: 50%;
+  background: var(--stage-light);
+}
+
+/* 仕事の街と同じ、ひし形のタイル（下の影は、タイルの厚み） */
+.tile {
+  position: absolute;
+  left: 50%;
+  top: 98px;
+  width: 104px;
+  height: 52px;
+  margin-left: -52px;
+  z-index: 1;
+  background: var(--tile);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.art::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 105px;
+  z-index: 0;
+  width: 104px;
+  height: 52px;
+  margin-left: -52px;
+  background: var(--tile-side);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+/* キャラクター（JobFigure の canvas。足もとが、タイルの真ん中に来る） */
+.figure {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  z-index: 2;
+  width: 200px;
+  height: 128px;
+  margin-left: -100px;
+}
+.figure canvas { display: block; }
+
+/* カードにポインターを乗せると、キャラクターが1回はねる */
+.job:hover .figure { animation: hop 0.45s ease-out; }
+@keyframes hop {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+.jobName { margin: 8px 10px 0; font-size: 1.08rem; font-weight: 800; line-height: 1.45; word-break: auto-phrase; }
+
+/* 日本では少ない仕事・海外の仕事の印（絵の右上に貼ったシール） */
+.abroad {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #8a6d1f;
+  background: #fff;
+  border-radius: 99px;
+  padding: 2px 9px;
+  box-shadow: 0 1px 0 rgba(58, 56, 54, 0.12);
+  transform: rotate(3deg);
+}
+
+/* 職業の大分類のタグ。絵の下の端に重ねて、カードの種類を示す札のように見せる */
+.tag {
+  position: relative;
+  z-index: 3;
+  align-self: flex-start;
+  margin: -13px 10px 0;
+  padding: 3px 10px;
+  border-radius: 13px;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--line);
+  color: #66615c;
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.5;
+  word-break: auto-phrase;
+}
+
+.summary { margin: 6px 10px 12px; font-size: 0.86rem; line-height: 1.65; color: var(--ink); }
+
+/* 同じ仕事が出てくる、ほかの業界 */
+.others {
+  margin: auto 4px 10px;
+  background: var(--card-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.othersLabel { font-size: 0.75rem; font-weight: 800; color: var(--rose); }
+
+.otherList { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+
+.otherLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 99px;
+  padding: 2px 10px 2px 3px;
+  word-break: auto-phrase;
+}
+
+.otherLink:hover { border-color: var(--sub); }
+
+/* カードの下：仕事の街の、この仕事の人へ */
+.townLink {
+  margin: auto 10px 0;
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--rose);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.others + .townLink { margin-top: 0; }
+
+/* リンク先の業界のアイコン（小さいステッカー） */
+.chipIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--tone-bg);
+  color: var(--tone-ink);
+}
+
+.attribution {
+  margin: 24px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--sub);
+}
+
+.attribution p { margin: 0; }
+
+.attribution details { margin-top: 8px; }
+
+.attribution summary { cursor: pointer; width: fit-content; }
+
+.attribution ul { margin: 6px 0 0; padding-left: 1.2em; display: grid; gap: 6px; }
+
+.attribution a { color: inherit; overflow-wrap: anywhere; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker { animation: none; }
+  .job { transition: none; }
+  .job:hover, .job:nth-child(even):hover { transform: none; }
+  .job:hover .figure { animation: none; }
+}
+
+/* 画面幅ではなくメイン領域（layout の .main）の幅で詰める */
+@container (max-width: 900px) {
+  .page { padding: 24px 16px 32px; }
+  .card { padding: 24px 20px; }
+  .hero { gap: 22px; padding: 28px 24px; }
+
+  /* 分野へのリンクは1行にし、横にずらして選ぶ（貼り付いたときに画面をふさがないように） */
+  .fieldIndex {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 0 -20px;
+    padding: 10px 20px;
+  }
+  .fieldIndex::-webkit-scrollbar { display: none; }
+  /* 右端を薄くして、横に続きがあることを示す */
+  .fieldIndex { mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent); }
+  .fieldIndex > li { flex: none; }
+  .field { scroll-margin-top: 72px; }
+  .field + .field { margin-top: 72px; }
+}
+
+/* スマホ幅：ステッカーを文字の上に置き、ちらしたアイコンは右上だけにする */
+@container (max-width: 560px) {
+  .hero { flex-direction: column; align-items: flex-start; gap: 18px; padding: 24px 20px; }
+  .sticker { width: 72px; height: 72px; box-shadow: 0 0 0 4px #fff, 0 6px 14px rgba(0, 0, 0, 0.08); }
+  .sticker svg { width: 36px; height: 36px; }
+  .title { font-size: 24px; }
+  .sectionTitle { font-size: 1.4rem; }
+  .fieldTitle { font-size: 1.3rem; }
+  .sprinkles { width: 75%; height: 120px; }
+}

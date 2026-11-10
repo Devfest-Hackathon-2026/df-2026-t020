@@ -1,0 +1,172 @@
+/* 外側の余白は CareerFlow の .flow が持つ */
+.app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 28px;
+  align-items: start;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 32px 36px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* 何回目か（1 / 3 好きなこと） */
+.round { color: var(--sub); font-size: 0.82rem; font-weight: 800; margin: 0 0 6px; }
+
+.title { font-size: 1.6rem; margin: 0 0 8px; font-weight: 800; }
+
+.lead { color: var(--rose); font-weight: 800; margin: 0 0 12px; font-size: 1.05rem; }
+
+.notes {
+  color: var(--sub);
+  font-size: 0.85rem;
+  margin: 0 0 26px;
+  padding: 0;
+  list-style: none;
+  line-height: 1.8;
+}
+
+.notes li::before { content: "・"; }
+
+/* タグ一覧 */
+.cloud { display: flex; flex-wrap: wrap; gap: 10px 9px; align-items: center; }
+
+/* 自由記述（得意なこと・大事にしたいこと） */
+.free { margin-top: 24px; display: grid; gap: 6px; }
+
+.free label { font-size: 0.8rem; color: var(--sub); font-weight: 700; }
+
+.free input {
+  min-width: 0;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.free input:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+.free input:disabled { background: var(--line); cursor: not-allowed; }
+
+.pill {
+  --c: #5b7fa6;
+  border: 2px solid var(--c);
+  color: var(--c);
+  background: #fff;
+  border-radius: 99px;
+  padding: 7px 16px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, transform 0.12s;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.pill:hover { background: color-mix(in srgb, var(--c) 10%, #fff); }
+
+.pill:active { transform: scale(0.95); }
+
+.pill.sel { background: var(--c); color: #fff; }
+
+/* 上限まで選んだときの、ほかのタグ */
+.pill:disabled { opacity: 0.35; cursor: default; }
+
+.pill:disabled:hover { background: #fff; }
+
+.pill.sel.parent::after { content: " ▾"; font-size: 0.75em; opacity: 0.85; }
+
+/* 詳しいタグの段。親のあとで改行し、親の色の線を左に引いて、どのタグから出たかを示す */
+.detail {
+  --c: #5b7fa6;
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 7px;
+  align-items: center;
+  margin: 2px 0 6px;
+  padding: 4px 0 4px 14px;
+  border-left: 3px solid color-mix(in srgb, var(--c) 45%, #fff);
+}
+
+.child { font-size: 0.88rem; padding: 6px 14px; border-style: dashed; }
+
+.child.sel { border-style: solid; }
+
+.fresh { animation: pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1); }
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* サイドバー */
+.side { position: sticky; top: 24px; }
+
+.sideCard { padding: 24px; }
+
+.sideTitle {
+  font-size: 1rem;
+  margin: 0 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.sideTitle small { color: var(--sub); font-weight: 500; font-size: 0.8rem; }
+
+.chosen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 40px;
+  max-height: 420px;
+  overflow: auto;
+  margin-bottom: 6px;
+}
+
+.chip { font-size: 0.8rem; padding: 4px 10px; }
+
+.chip::after { content: " ×"; opacity: 0.8; }
+
+.empty { color: var(--sub); font-size: 0.85rem; }
+
+.go {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font: inherit;
+  font-weight: 800;
+  font-size: 1rem;
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.go:disabled { background: var(--off); cursor: default; }
+
+.reset {
+  display: block;
+  margin: 10px auto 0;
+  border: none;
+  background: none;
+  color: var(--sub);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* 画面幅ではなくメイン領域（layout の .main）の幅で1列にする */
+@container (max-width: 900px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; }
+  .card { padding: 24px 20px; }
+}

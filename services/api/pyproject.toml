@@ -1,0 +1,14 @@
+[project]
+name = "api"
+version = "0.1.0"
+description = "公開 API。職業カードに「あなたに関係ある理由」の1文を付ける"
+requires-python = ">=3.13"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "google-genai>=1.0",
+  "pydantic>=2.7",
+]
+
+[tool.uv]
+package = false

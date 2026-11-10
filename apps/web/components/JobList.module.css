@@ -1,0 +1,170 @@
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 32px 36px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.brand {
+  font-weight: 800;
+  color: var(--sub);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+
+.title { font-size: 1.4rem; margin: 0 0 18px; font-weight: 800; }
+
+.empty { color: var(--sub); margin: 0; }
+
+.group + .group { margin-top: 26px; }
+
+.groupTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--sub);
+}
+
+.badge {
+  --c: var(--sub);
+  border-radius: 99px;
+  padding: 3px 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--c);
+}
+
+.near { --c: var(--type-S); }
+.mid { --c: var(--type-I); }
+.far { --c: var(--rose); }
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.job {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.jobHead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+
+.jobName { margin: 0; font-size: 1.05rem; font-weight: 800; }
+
+.abroad {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--type-E);
+  border: 1px solid currentColor;
+  border-radius: 99px;
+  padding: 1px 8px;
+}
+
+.major { font-size: 0.78rem; color: var(--sub); }
+
+.summary { margin: 0; font-size: 0.86rem; line-height: 1.65; color: var(--ink); }
+
+/* API からもらう「あなたとのつながり」の1文 */
+.reason {
+  border-left: 3px solid var(--rose);
+  padding: 2px 0 2px 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.reason p { margin: 0; font-size: 0.88rem; line-height: 1.6; font-weight: 700; color: var(--ink); }
+
+.reasonLabel { font-size: 0.72rem; font-weight: 800; color: var(--rose); }
+
+.pending p { font-weight: 400; color: var(--sub); }
+
+.link {
+  margin-top: auto;
+  background: var(--card-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.link p { margin: 0; font-size: 0.86rem; line-height: 1.6; }
+
+.linkTag {
+  justify-self: start;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--rose);
+}
+
+.linkTag::before { content: "「"; }
+.linkTag::after { content: "」から"; }
+
+
+/* 紹介した仕事を、仕事の街で光らせるリンク */
+.toTown { margin: 0 0 18px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 0.82rem; color: var(--sub); }
+.toTown a {
+  padding: 7px 16px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.toTown a:hover { background: #000; }
+
+/* カードの下：この仕事を、仕事の街と業界ページで見るリンク */
+.places { margin-top: auto; padding-top: 4px; display: grid; gap: 6px; }
+.link + .places { margin-top: 0; }
+.placesLabel { font-size: 0.72rem; font-weight: 800; color: var(--sub); }
+.places ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.places a {
+  display: inline-block;
+  padding: 2px 10px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--card);
+  font-size: 0.8rem;
+  color: var(--ink);
+  text-decoration: none;
+  word-break: auto-phrase;
+}
+.places a:hover { border-color: var(--sub); }
+.places .town { border-color: var(--ink); font-weight: 700; }
+
+.attribution {
+  margin: 24px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--sub);
+}
+
+.attribution p { margin: 0; }
+
+.attribution details { margin-top: 8px; }
+
+.attribution summary { cursor: pointer; width: fit-content; }
+
+.attribution ul { margin: 6px 0 0; padding-left: 1.2em; display: grid; gap: 6px; }
+
+.attribution a { color: inherit; overflow-wrap: anywhere; }
+
+/* 画面幅ではなくメイン領域（layout の .main）の幅で詰める */
+@container (max-width: 900px) {
+  .card { padding: 24px 20px; }
+}

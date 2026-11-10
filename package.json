@@ -1,0 +1,10 @@
+{
+  "name": "devfest-gdgoc-2026",
+  "private": true,
+  "description": "Eureka：大学生がまだ知らない仕事に出会うアプリ（DevFest GDGoC Japan Hackathon 2026）",
+  "license": "MIT",
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=22"
+  }
+}

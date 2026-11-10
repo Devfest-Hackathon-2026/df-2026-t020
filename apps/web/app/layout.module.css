@@ -1,0 +1,16 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar) minmax(0, 1fr);
+  min-height: calc(100vh - var(--header));
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  container-type: inline-size;   /* 中の画面は @container で幅に合わせる */
+}
+
+@media (max-width: 720px) {
+  .shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+}

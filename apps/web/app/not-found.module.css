@@ -1,0 +1,7 @@
+.notFound { padding: 80px 16px; text-align: center; }
+
+.title { margin: 0 0 16px; font-size: 22px; font-weight: 700; }
+
+.link { color: var(--rose); font-weight: 700; text-decoration: none; }
+
+.link:hover { text-decoration: underline; }
