@@ -146,6 +146,19 @@
 }
 .places a:hover { border-color: var(--sub); }
 .places .town { border-color: var(--ink); font-weight: 700; }
+/* 元のデータのサイトへ（外のサイトなので、丸いリンクとは見た目を分ける） */
+.places a.source {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: 0.78rem;
+  color: var(--sub);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.places a.source::after { content: " ↗"; }
 
 .attribution {
   margin: 24px 0 0;

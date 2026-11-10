@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { industries } from "@/data/industries";
 import { industryJobs, type IndustryJob } from "@/data/industryJobs";
-import { industryJobHref, townJobHref } from "@/data/jobIndustries";
+import { industryJobHref, sourcePage, townJobHref } from "@/data/jobIndustries";
 import ArrivedJob from "./ArrivedJob";
 import IndustryIcon, { IconSprinkles } from "./IndustryIcon";
 import JobFigure from "./JobFigure";
@@ -180,6 +180,9 @@ function JobCard({ job }: { job: IndustryJob }) {
       <Link className={styles.townLink} href={townJobHref(o.id)}>
         仕事の街で会う
       </Link>
+      <a className={styles.sourceLink} href={sourcePage(o.id).href} target="_blank" rel="noopener noreferrer">
+        {sourcePage(o.id).label}
+      </a>
     </li>
   );
 }

@@ -6,6 +6,7 @@
 - POST /api/reasons：画面がデータで選んだ職業カードに、理由の1文を付ける
   （Gemini が使えず /api/recommend が空のとき、画面はこちらに切り替える）
 API は会話を保存しない。画面が毎回、これまでの会話をまとめて送る。
+Gemini を呼ぶ3つは、短い時間に呼びすぎると 429 を返す（app/ratelimit.py）。
 localhost で画面（pnpm dev）から呼ぶときは、
 環境変数 ALLOWED_ORIGINS に画面のオリジンを入れる（CORS）。
 Hosting の rewrite から呼ぶときは同じオリジンなので、ALLOWED_ORIGINS は要らない。
@@ -15,12 +16,12 @@ import logging
 import os
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from pydantic.alias_generators import to_camel
 
-from app import cards, chat, llm, reasons, recommend
+from app import cards, chat, llm, ratelimit, reasons, recommend
 
 logging.basicConfig(level=logging.INFO)
 
@@ -180,11 +181,19 @@ def create_app() -> FastAPI:
             allow_headers=["Content-Type"],
         )
 
+    # Gemini を呼ぶ3つは、呼びすぎを止める（app/ratelimit.py）
+    limited = [Depends(ratelimit.check)]
+
     @app.get("/api/health")
     def health() -> dict[str, str]:
         return {"status": "ok", "llm": llm.backend(), "model": llm.default_model()}
 
-    @app.post("/api/chat", response_model=ChatOut, response_model_by_alias=True)
+    @app.post(
+        "/api/chat",
+        response_model=ChatOut,
+        response_model_by_alias=True,
+        dependencies=limited,
+    )
     def post_chat(req: ConversationIn) -> ChatOut:
         ctx = req.context()
         nxt = chat.next_turn(ctx)
@@ -208,7 +217,12 @@ def create_app() -> FastAPI:
             source=nxt.source,
         )
 
-    @app.post("/api/recommend", response_model=RecommendOut, response_model_by_alias=True)
+    @app.post(
+        "/api/recommend",
+        response_model=RecommendOut,
+        response_model_by_alias=True,
+        dependencies=limited,
+    )
     def post_recommend(req: ConversationIn) -> RecommendOut:
         picks, source = recommend.recommend(req.context())
         return RecommendOut(
@@ -219,7 +233,12 @@ def create_app() -> FastAPI:
             source=source,
         )
 
-    @app.post("/api/reasons", response_model=ReasonsResponse, response_model_by_alias=True)
+    @app.post(
+        "/api/reasons",
+        response_model=ReasonsResponse,
+        response_model_by_alias=True,
+        dependencies=limited,
+    )
     def post_reasons(req: ReasonsRequest) -> ReasonsResponse:
         data = cards.load()
         items: list[reasons.CardInput] = []

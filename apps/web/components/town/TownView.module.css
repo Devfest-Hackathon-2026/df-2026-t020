@@ -200,6 +200,17 @@
   cursor: pointer;
 }
 
+.source {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--sub);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.source::after { content: " ↗"; }
+
 .others { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: var(--card-soft); }
 .othersLabel { display: block; margin-bottom: 6px; font-size: 0.75rem; font-weight: 800; color: var(--sub); }
 .others ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
@@ -224,4 +235,23 @@
 /* スマホ幅では、区画のボタンと重なるので拡大・縮小のボタンは出さない（指でつまんで拡大・縮小できる） */
 @container (max-width: 560px) {
   .zoom { display: none; }
+
+  /* 街が見える広さを残す：ヘッダーとメニュー（60px ＋ 65px）を引いた高さにし、案内は短く、区画のボタンは横1列にして指で送る */
+  .town { height: calc(100dvh - var(--header) - 65px); min-height: 420px; }
+  .intro { top: 10px; left: 10px; right: 10px; width: auto; padding: 12px 14px; }
+  .intro .lead { display: none; }
+  .intro .hint:last-child { display: none; }
+  .title { font-size: 1.2rem; }
+  .counter { margin-bottom: 8px; }
+  .districts {
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    padding: 0 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    pointer-events: auto;
+  }
+  .chip { flex: none; }
 }

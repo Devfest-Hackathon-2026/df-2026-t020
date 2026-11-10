@@ -10,6 +10,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ChatStep from "@/components/ChatStep";
 import HobbyPicker from "@/components/HobbyPicker";
 import JobResults from "@/components/JobResults";
+import { warmUpApi } from "@/data/api";
 import type { Turn } from "@/data/conversation";
 import { freeTag, NODES, ROUNDS, withDescendants, type RoundKey, type TagNode } from "@/data/tags";
 import { START_OVER_EVENT, recallFlow, rememberFlow, rememberRecommended } from "@/data/visitMemory";
@@ -37,6 +38,11 @@ export default function CareerFlow() {
   useEffect(() => {
     rememberFlow({ step, round, selected, freeTexts, history });
   }, [step, round, selected, freeTexts, history]);
+
+  // タグを選んでいる間に、API を起こしておく（会話の1回目を待たせない）
+  useEffect(() => {
+    warmUpApi();
+  }, []);
 
   // 選択が変わったときだけ作り直す（会話と推薦の呼び出しが、これを見て動く）。
   // 自由記述は、点の付かないタグ（freeTag）にして、その回の最後に足す

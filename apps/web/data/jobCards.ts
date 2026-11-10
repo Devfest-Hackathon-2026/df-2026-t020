@@ -74,7 +74,13 @@ const familiarityRank = (o: Occupation) => o.familiarity ?? 4;
  * 選んだ興味タグから、見せる職業カードを選ぶ。
  * 対応する職業カードのタグがなければ空の配列を返す。
  */
-export function pickCards(data: CardsData, selected: readonly TagNode[], perDistance = PER_DISTANCE): PickedCard[] {
+export function pickCards(
+  data: CardsData,
+  selected: readonly TagNode[],
+  perDistance = PER_DISTANCE,
+  /** 選ばない職業（会話の中でもう見せた仕事。同じカードを2回出さないため） */
+  exclude: ReadonlySet<number> = new Set(),
+): PickedCard[] {
   const weights = cardTagWeights(selected);
   // 重いタグ（多く選ばれたタグ）から順に回す
   const tags = [...weights.keys()].sort((a, b) => (weights.get(b) ?? 0) - (weights.get(a) ?? 0));
@@ -91,7 +97,7 @@ export function pickCards(data: CardsData, selected: readonly TagNode[], perDist
       )[0];
 
   const picked: PickedCard[] = [];
-  const used = new Set<number>();
+  const used = new Set<number>(exclude);
 
   for (const distance of DISTANCES) {
     // タグごとの候補（知られていない順）

@@ -111,7 +111,14 @@ function Lunch() {
   );
 }
 
-export default function GeminiThinking({ variant = "basic" }: { variant?: ThinkingVariant }) {
+export default function GeminiThinking({
+  variant = "basic",
+  note,
+}: {
+  variant?: ThinkingVariant;
+  /** 「Gemini思考中…」の下に出す一言（何を待っているか） */
+  note?: string;
+}) {
   return (
     <div className={`${styles.wrap} ${styles[`is_${variant}`] ?? ""}`} role="status">
       <svg className={styles.art} viewBox="-60 -40 240 135" aria-hidden="true">
@@ -122,6 +129,7 @@ export default function GeminiThinking({ variant = "basic" }: { variant?: Thinki
         {variant === "ball" && <Ball />}
       </svg>
       <p className={styles.text}>Gemini思考中…</p>
+      {note && <p className={styles.note}>{note}</p>}
     </div>
   );
 }

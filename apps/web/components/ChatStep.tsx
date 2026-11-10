@@ -17,6 +17,7 @@ import {
   type Reaction,
   type Turn,
 } from "@/data/conversation";
+import { ApiError } from "@/data/api";
 import type { TagNode } from "@/data/tags";
 import { recallChat, rememberChat } from "@/data/visitMemory";
 import GeminiThinking, { thinkingVariant } from "./GeminiThinking";
@@ -32,7 +33,7 @@ type Props = {
 };
 
 /** API の返事。forTurns が今の答えの数と違えば、前の回への返事（読み込み中） */
-type Loaded = { forTurns: number; next: NextTurn } | { forTurns: number; error: true };
+type Loaded = { forTurns: number; next: NextTurn } | { forTurns: number; error: "busy" | "failed" };
 
 /** いまの回で付けた反応。forTurns が違えば前の回のもの */
 type Reactions = { forTurns: number; byJob: Record<string, Reaction[]> };
@@ -76,8 +77,11 @@ export default function ChatStep({ tags, history, onAnswer, onUndo, onFinish, on
           setLoaded({ forTurns: history.length, next });
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setLoaded({ forTurns: history.length, error: true });
+      .catch((e: unknown) => {
+        if (controller.signal.aborted) return;
+        // 429 は呼びすぎ。ほかは、つながらない・返事が遅すぎる・API の中の失敗
+        const busy = e instanceof ApiError && e.status === 429;
+        setLoaded({ forTurns: history.length, error: busy ? "busy" : "failed" });
       });
     return () => controller.abort();
   }, [tags, history, retry]);
@@ -144,7 +148,11 @@ export default function ChatStep({ tags, history, onAnswer, onUndo, onFinish, on
 
       {current && "error" in current ? (
         <div className={styles.error} role="alert">
-          <p>読み込めませんでした。API が動いているか確かめてください。</p>
+          <p>
+            {current.error === "busy"
+              ? "アクセスが集中しています。少し待ってから、もう一度試してください。"
+              : "読み込めませんでした。少し待ってから、もう一度試してください。"}
+          </p>
           <div className={styles.actions}>
             <button type="button" className={styles.primary} onClick={() => setRetry(retry + 1)}>
               もう一度試す

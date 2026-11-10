@@ -79,6 +79,9 @@ export async function createTownScene(
   data: TownData,
   handlers: { onSelect: (id: number) => void; met: ReadonlySet<number>; insets: { left: number; right: number } },
 ): Promise<TownController> {
+  // Hosting の Content-Security-Policy は eval を許していない（firebase.json）。
+  // PixiJS は既定でシェーダーの処理を new Function で作るので、eval を使わない実装に差し替えてから読み込む
+  await import("pixi.js/unsafe-eval");
   const PIXI = await import("pixi.js");
   const { Viewport: ViewportClass } = await import("pixi-viewport");
   const { Application, Container, Graphics, Text, Sprite, Rectangle } = PIXI;

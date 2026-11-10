@@ -12,12 +12,13 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { fetchRecommend, shownJobs, type JobPick, type ShownJob, type Turn } from "@/data/conversation";
-import { CARDS_URL, DISTANCES, majorName, pickCards, type CardsData, type Distance, type Occupation } from "@/data/jobCards";
-import { industriesOf, industryJobHref, townJobHref } from "@/data/jobIndustries";
+import { CARDS_URL, DISTANCES, PER_DISTANCE, majorName, pickCards, type CardsData, type Distance, type Occupation } from "@/data/jobCards";
+import { industriesOf, industryJobHref, sourcePage, townJobHref } from "@/data/jobIndustries";
 import { fetchReasons, reasonsKey, type Reason } from "@/data/reasons";
 import type { TagNode } from "@/data/tags";
 import { saveResult, tagsByRound } from "@/data/resultHistory";
 import { recallPicks, rememberPicks, rememberRecommended } from "@/data/visitMemory";
+import GeminiThinking from "./GeminiThinking";
 import flow from "./CareerFlow.module.css";
 import styles from "./JobList.module.css";
 
@@ -89,10 +90,17 @@ export default function JobResults({ tags, history, onRetryChat, onRestart }: Pr
     return () => controller.abort();
   }, [tags, history, picksKey]);
 
+  // 会話で見せた仕事。上で別に出すので、紹介する仕事からは外す（同じカードを2回出さない）
+  const shown = useMemo(() => shownJobs(history), [history]);
+  const shownIds = useMemo(
+    () => new Set(shown.flatMap((j) => (j.occupationId != null ? [j.occupationId] : []))),
+    [shown],
+  );
+
   // データでの選び方（Gemini が選べなかったとき）
   const fallbackCards = useMemo(
-    () => (data && recommended.status === "fallback" ? pickCards(data, tags) : []),
-    [data, recommended.status, tags],
+    () => (data && recommended.status === "fallback" ? pickCards(data, tags, PER_DISTANCE, shownIds) : []),
+    [data, recommended.status, tags, shownIds],
   );
   const fallbackKey = useMemo(() => reasonsKey(tags, fallbackCards), [tags, fallbackCards]);
   const [fallbackReasons, setFallbackReasons] = useState<{ key: string; reasons: ReadonlyMap<number, Reason> } | null>(
@@ -114,7 +122,7 @@ export default function JobResults({ tags, history, onRetryChat, onRestart }: Pr
     if (recommended.status === "ok") {
       const byId = new Map(data.occupations.map((o) => [o.id, o]));
       return recommended.picks.flatMap((p) => {
-        const occupation = byId.get(p.occupationId);
+        const occupation = shownIds.has(p.occupationId) ? undefined : byId.get(p.occupationId);
         return occupation ? [{ occupation, distance: p.distance, reason: { text: p.reason, ai: true } }] : [];
       });
     }
@@ -125,7 +133,7 @@ export default function JobResults({ tags, history, onRetryChat, onRestart }: Pr
       reason: reasons?.get(c.occupation.id),
       link: { tag: c.link.tag, text: c.link.link, reviewed: c.link.reviewed },
     }));
-  }, [data, recommended, fallbackCards, fallbackReasons, fallbackKey]);
+  }, [data, recommended, fallbackCards, fallbackReasons, fallbackKey, shownIds]);
 
   const loading = !cardsFailed && (!data || recommended.status === "loading");
 
@@ -149,7 +157,6 @@ export default function JobResults({ tags, history, onRetryChat, onRestart }: Pr
   }, [loading, cards, reasonsReady, picksKey, tags, history, recommended.status]);
 
   // 会話で見せた仕事への反応
-  const shown = useMemo(() => shownJobs(history), [history]);
   const liked = shown.filter((j) => j.reactions.includes("気になる"));
   const unknownCount = shown.filter((j) => j.reactions.includes("知らなかった")).length;
   const likedUnknown = liked.filter((j) => j.reactions.includes("知らなかった")).length;
@@ -204,9 +211,7 @@ export default function JobResults({ tags, history, onRetryChat, onRestart }: Pr
       {cardsFailed ? (
         <p className={styles.empty}>職業カードを読み込めませんでした。ページを読み込み直してください。</p>
       ) : loading ? (
-        <p className={`${styles.empty} ${flow.thinking}`} role="status">
-          1,000の仕事の中から、あなたに紹介する仕事を選んでいます…（少し時間がかかります）
-        </p>
+        <GeminiThinking variant="bulb" note="1,000の仕事から選んでいます（少し時間がかかります）" />
       ) : cards.length === 0 ? (
         <p className={styles.empty}>紹介できる仕事が見つかりませんでした。別の好きなものも選んでみてください。</p>
       ) : (
@@ -342,6 +347,7 @@ export function JobCard({
   reasonLabel?: string;
 }) {
   const { occupation: o, reason, link } = card;
+  const source = sourcePage(o.id);
   const abroad =
     o.jp_presence === "日本では少ない" ? "日本ではまだ少ない" : o.jp_presence === "日本にはほぼない" ? "海外の仕事" : null;
 
@@ -386,6 +392,10 @@ export function JobCard({
             </li>
           ))}
         </ul>
+        {/* 元のデータのサイト（仕事の内容・なり方などがくわしく載っている） */}
+        <a className={styles.source} href={source.href} target="_blank" rel="noopener noreferrer">
+          {source.label}
+        </a>
       </div>
     </li>
   );

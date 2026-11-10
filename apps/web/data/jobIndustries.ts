@@ -26,3 +26,16 @@ export function industryJobHref(slug: string, id: number): string {
 export function townJobHref(id: number): string {
   return `/map?job=${id}`;
 }
+
+/**
+ * その仕事を、元のデータのサイトでくわしく調べるためのリンク。
+ * 職業カードの id は、job tag の職業なら job tag の番号、O*NET の職業なら O*NET のコードの数字8けた（53-7121.00 → 53712100）。
+ */
+export function sourcePage(id: number): { href: string; label: string } {
+  const digits = String(id);
+  if (digits.length < 8) {
+    return { href: `https://shigoto.mhlw.go.jp/User/Occupation/Detail/${id}`, label: "job tag でくわしく見る" };
+  }
+  const code = `${digits.slice(0, 2)}-${digits.slice(2, 6)}.${digits.slice(6)}`;
+  return { href: `https://www.onetonline.org/link/summary/${code}`, label: "O*NET でくわしく見る（英語）" };
+}

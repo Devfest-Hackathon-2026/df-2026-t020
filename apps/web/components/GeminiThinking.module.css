@@ -20,6 +20,7 @@
 .flame { fill: #f6a23c; opacity: 0; }
 
 .text { margin: 0; color: var(--sub); font-size: 0.95rem; }
+.note { margin: 2px 0 0; color: var(--sub); font-size: 0.8rem; }
 
 .robot, .armL, .armR, .eyes, .spark, .bulb, .ball, .ballSpin, .sign, .doll, .flame {
   transform-box: fill-box;

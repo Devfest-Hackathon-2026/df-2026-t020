@@ -17,7 +17,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from app import cards, llm
-from app.chat import RIASEC_NAMES, Context, is_japanese, shown_jobs
+from app.chat import RIASEC_NAMES, Context, Job, is_japanese, shown_jobs
 
 logger = logging.getLogger(__name__)
 
@@ -132,16 +132,21 @@ def _clean(text: str) -> str | None:
     return text if text and len(text) <= MAX_REASON_CHARS else None
 
 
-def check(parsed: object) -> list[Pick]:
-    """一覧にない ID・重複・長すぎる理由を落とし、距離ごとに上限までにする"""
+def check(parsed: object, shown: tuple[Job, ...] | list[Job] = ()) -> list[Pick]:
+    """一覧にない ID・重複・長すぎる理由を落とし、距離ごとに上限までにする。
+    会話の中で見せた仕事（shown）は、画面が別に出すので、ここでは落とす
+    （プロンプトでも頼んでいるが、Gemini が守らないことがあるので確かめる）"""
     if not isinstance(parsed, list):
         return []
     known = cards.load().occupations
     picks: list[Pick] = []
-    seen: set[int] = set()
+    seen: set[int] = {j.occupation_id for j in shown if j.occupation_id is not None}
+    shown_names = {j.name for j in shown}
     per: dict[str, int] = {}
     for item in parsed:
         if not isinstance(item, GeminiPick) or item.id in seen or item.id not in known:
+            continue
+        if known[item.id]["name"] in shown_names:
             continue
         reason = _clean(item.reason)
         if reason is None or not is_japanese(reason) or per.get(item.distance, 0) >= PER_DISTANCE:
@@ -180,7 +185,7 @@ def recommend(ctx: Context) -> tuple[list[Pick], str]:
         model=llm.recommend_model(),
         timeout_ms=TIMEOUT_MS,
     )
-    picks = check(parsed)
+    picks = check(parsed, shown_jobs(ctx.history))
     if len(picks) < MIN_JOBS:
         if parsed is not None:
             logger.warning("Gemini が選んだ職業のうち使えるものが少なかった（%d件）", len(picks))

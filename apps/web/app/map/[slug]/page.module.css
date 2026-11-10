@@ -360,6 +360,17 @@
 }
 .others + .townLink { margin-top: 0; }
 
+/* 元のデータのサイトへ（外のサイト） */
+.sourceLink {
+  margin: 6px 10px 0;
+  align-self: flex-start;
+  font-size: 0.76rem;
+  color: var(--sub);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sourceLink::after { content: " ↗"; }
+
 /* リンク先の業界のアイコン（小さいステッカー） */
 .chipIcon {
   flex: none;

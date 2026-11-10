@@ -72,6 +72,8 @@ type RecommendResponse = {
 /** API が受け付ける長さ（services/api の main.py と同じ） */
 export const MAX_ANSWER_CHARS = 40;
 const MAX_INTERESTS = 40;
+/** 推薦は1,000職業を読むので長く待つ（API の上限は60秒。Hosting から Cloud Run への転送も60秒で切れる） */
+const RECOMMEND_TIMEOUT_MS = 65_000;
 /** 得意なこと・大事にしたいことを送る数の上限（services/api の MAX_SELF_TAGS と同じ） */
 const MAX_SELF_TAGS = 3;
 
@@ -127,6 +129,11 @@ export async function fetchRecommend(
   history: readonly Turn[],
   signal?: AbortSignal,
 ): Promise<JobPick[]> {
-  const json = await postJson<RecommendResponse>("/api/recommend", payload(selected, history), signal);
+  const json = await postJson<RecommendResponse>(
+    "/api/recommend",
+    payload(selected, history),
+    signal,
+    RECOMMEND_TIMEOUT_MS,
+  );
   return json.jobs;
 }

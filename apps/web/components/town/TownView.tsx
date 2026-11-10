@@ -9,7 +9,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { industryJobHref } from "@/data/jobIndustries";
+import { industryJobHref, sourcePage } from "@/data/jobIndustries";
 import { DISTRICTS, type TownData, type TownPerson } from "@/data/townModel";
 import { recallRecommended } from "@/data/visitMemory";
 import type { TownController } from "./townScene";
@@ -265,6 +265,14 @@ export default function TownView({ data }: { data: TownData }) {
           <button type="button" className={styles.link} onClick={() => controllerRef.current?.focus(selected.id)}>
             この人のところへ
           </button>
+          <a
+            className={styles.source}
+            href={sourcePage(selected.id).href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {sourcePage(selected.id).label}
+          </a>
           {selected.industries.length > 0 && (
             <div className={styles.others}>
               <span className={styles.othersLabel}>この仕事が出てくる業界（業界ページで、近い仕事と見くらべる）</span>
